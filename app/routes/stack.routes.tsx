@@ -1,34 +1,15 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { TabRoutes } from "./tab.routes";
-import { CreateSchedule, StackType } from "../screens/createSchedule/CreateSchedule";
 import { ScheduleDetails } from "../components/ScheduleDetails";
 import { CreateMusicStack } from "./createMusicStack.routes";
 import { CreateScheduleStack } from "./createScheduleStack.routes";
-import { Button, Icon } from "react-native-elements";
-import { Alert } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from "@react-navigation/native";
+import { ScheduleMusicDetails } from "../components/ScheduleMusicDetails";
+import { EditScheduleMusicDetails } from "../components/EditScheduleMusicDetails";
+import { EditLinksScheduleMusicDetails } from "../components/EditLinksScheduleMusic";
 
 export function StackRoutes() {
   const Stack = createNativeStackNavigator();
-  const navigation = useNavigation<StackType>();
-
-  const clearAsyncStorage = async () => {
-    await AsyncStorage.clear();
-    navigation.navigate("Schedules");
-  };
-  const backAction = async () => {
-    Alert.alert("Atenção", "Deseja cancelar?", [
-      {
-        text: "Cancelar",
-        onPress: () => null,
-        style: "cancel",
-      },
-      { text: "Sim", onPress: clearAsyncStorage },
-    ]);
-    return true;
-  };
-
+  
   return (
     <Stack.Navigator
       screenOptions={{
@@ -46,24 +27,38 @@ export function StackRoutes() {
         component={CreateScheduleStack}
         options={{
           headerShown: false,
-          headerLeft: () => (
-            <Button
-              buttonStyle={{ backgroundColor: "transparent" }}
-              onPress={backAction}
-              icon={<Icon name="arrow-back" color="#E1E1E1" />}
-            />
-          ),
         }}
       />
       <Stack.Screen
         name="CreateMusic"
         component={CreateMusicStack}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="ScheduleDetails"
         component={ScheduleDetails}
         options={{ title: "Escala" }}
+      />
+      <Stack.Screen
+        name="ScheduleMusicDetails"
+        component={ScheduleMusicDetails}
+        options={{
+          title: "Música",
+        }}
+      />
+      <Stack.Screen
+        name="EditScheduleMusicDetails"
+        component={EditScheduleMusicDetails}
+        options={{
+          title: "Editar Música",
+        }}
+      />
+      <Stack.Screen
+        name="EditLinksScheduleMusicDetails"
+        component={EditLinksScheduleMusicDetails}
+        options={{
+          title: "Editar versão"
+        }}
       />
     </Stack.Navigator>
   );

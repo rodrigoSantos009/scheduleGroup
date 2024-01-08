@@ -70,9 +70,11 @@ export function Informations() {
       }));
 
       const { error } = await supabase
-        .from("Schedules_Members")
+        .from("Schedules_Musics")
         .upsert(dataToInsert);
+      console.log(error);
     }
+
   }
 
   const saveSchedule = async (title: string, date: Date) => {

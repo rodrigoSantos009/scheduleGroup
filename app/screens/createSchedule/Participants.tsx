@@ -35,6 +35,17 @@ export function Participants({ route }: ParticipantsProps) {
       console.error("Erro ao recuperar os usuários selecionados:", error);
     }  
   };
+
+  const fetchSheduleMembers = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("Schedules_Members")
+        .select("profiles(id, avatar, full_name)")
+        .eq("schedule_id", route.params);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   
   const fetchUsers = async (ids: string[]) => {  
     try {

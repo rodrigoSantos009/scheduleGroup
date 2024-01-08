@@ -7,12 +7,15 @@ export function RenderSongs(song: SongsProps) {
   const { navigate } = useNavigation<SongStackType>();
 
   return (
-    <View key={song.id}>
+    <View>
       <TouchableOpacity
         onPress={() =>
           navigate("SongDetails", {
             title: song.title,
             artist: song.artist.name,
+            cover: song.album.cover,
+            artist_picture: song.artist.picture,
+            album_title: song.album.title
           })
         }
         style={{

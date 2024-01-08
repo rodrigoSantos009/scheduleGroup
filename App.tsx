@@ -3,13 +3,12 @@ import { supabase } from "../louvebrasilia/app/lib/supabase";
 import Auth from "../louvebrasilia/app/components/Auth/Auth";
 import { Session } from "@supabase/supabase-js";
 import { Routes } from "./app/routes";
-import { checkIfUserHasProfile } from "./app/components/Auth/CheckUserHasProfile";
-import Account from "./app/components/Auth/Account";
 import { StatusBar } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { NavigationContainer } from "@react-navigation/native";
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
-  const [hasProfile, setHasProfile] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -21,30 +20,15 @@ export default function App() {
     });
   }, []);
 
-  useEffect(() => {
-    if(session && session.user) {
-      const userId = session.user.id;
-      checkIfUserHasProfile(userId).then((result) => {
-        setHasProfile(result)
-      })
-    }
-  }, [session]);
-
   return (
-    <>
-      <StatusBar
-        barStyle="light-content" // Use 'dark-content' for light battery/clock
-        backgroundColor="#121212" // Change the background color of the status bar
-      />
-      {session && session.user ? (
-        hasProfile ? (
-          <Routes />
-        ) : (
-          <Account key={session.user.id} session={session} />
-        )
-      ) : (
-        <Auth />
-      )}
-    </>
+    <NavigationContainer>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <StatusBar
+          barStyle="light-content" 
+          backgroundColor="#121212"
+        />
+        {session && session.user ? (<Routes />) : (<Auth />)}
+      </GestureHandlerRootView>
+    </NavigationContainer>
   );
 }

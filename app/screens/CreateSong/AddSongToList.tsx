@@ -11,7 +11,7 @@ import { RouteProp, useRoute } from '@react-navigation/native'
 import { StackNavigator } from '../../routes/createMusicStack.routes'
 import { StyleSheet } from 'react-native'
 import { RenderSongs } from '../../components/RenderSongs'
-import { Searchbar, TextInput } from 'react-native-paper'
+import { TextInput } from 'react-native-paper'
 import { MaterialIcons } from '@expo/vector-icons'
 
 export type SongsProps = {
@@ -23,6 +23,7 @@ export type SongsProps = {
     picture_small: string
   },
   album: {
+    title: string,
     cover: string
   }
 }
@@ -53,7 +54,12 @@ export function AddSongToList() {
 
   return (
     <View style={styles.container}>
-      <TextInput style={styles.input} value={title} onChangeText={setTitle} placeholder="Título ou Artista"></TextInput>
+      <TextInput
+        style={styles.input}
+        value={title}
+        onChangeText={setTitle}
+        placeholder="Título ou Artista"
+      ></TextInput>
       <TouchableOpacity style={styles.button} onPress={foundSongs}>
         <MaterialIcons color="#E1E1E1" size={20} name="search" />
         <Text style={{ color: "#E1E1E1" }}>Buscar</Text>

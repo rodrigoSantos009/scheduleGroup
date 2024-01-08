@@ -1,8 +1,8 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { Participants } from "./Participants";
-import { Informations } from "./Informations";
-import { Musics } from "./Musics";
+import { Informations } from "../screens/createSchedule/Informations";
+import { Musics } from "../screens/createSchedule/Musics";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { Participants } from "../screens/createSchedule/Participants";
 
 export type StackNavigator = {
   Informations: undefined;
@@ -41,7 +41,7 @@ export type StackType = NativeStackNavigationProp<StackNavigator>;
 
 const Tab = createMaterialTopTabNavigator<StackNavigator>();
 
-export function CreateSchedule() { 
+export function EditScheduleTab() {
   return (
     <Tab.Navigator
       screenOptions={{

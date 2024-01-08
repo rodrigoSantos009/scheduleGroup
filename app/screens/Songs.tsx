@@ -16,8 +16,14 @@ export function Songs() {
         tabBarIndicatorStyle: { backgroundColor: "#E2E2E2" },
       }}
     >
-      <Tab.Screen name="Musícas" component={SongsItems} />
-      <Tab.Screen name="Artistas" component={Artist} />
-    </Tab.Navigator>
+      <Tab.Screen 
+        name="Musícas" 
+        component={SongsItems} 
+      />
+      <Tab.Screen 
+        name="Artistas" 
+        component={Artist} 
+      />
+    </Tab.Navigator>   
   );
 }

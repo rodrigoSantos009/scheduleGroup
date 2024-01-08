@@ -7,9 +7,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 export function Routes() {
   return (
     <SafeAreaProvider>
-      <NavigationContainer>
-        <StackRoutes />
-      </NavigationContainer>
+      <StackRoutes />
     </SafeAreaProvider>
   );
 }

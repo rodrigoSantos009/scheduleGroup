@@ -2,37 +2,69 @@ import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { StackType } from "./CreateSchedule";
-
-const Data = [
-  {
-    title: "Bondade de Deus",
-    artist: "Isaías Saad",
-    tone: "D",
-  },
-  {
-    title: "Louvemos ao Senhor",
-    artist: "MORADA",
-    tone: "F#",
-  },
-  {
-    title: "Santo Espírito",
-    artist: "Laura Souguellis",
-    tone: "E",
-  },
-];
+import { StackNavigator, StackType } from "./CreateSchedule";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { supabase } from "../../lib/supabase";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 type SongsProps = {
-  title: string;
+  id: string,
+  name: string;
   artist: string;
   tone: string;
 }[];
 
+type MusicsProps = NativeStackScreenProps<StackNavigator, "Musics">;
 
-
-export function Musics() {
+export function Musics({ route }: MusicsProps) {
   const { navigate } = useNavigation<StackType>();
-  const [songs, setSongs] = useState<SongsProps>(Data);
+  const [songs, setSongs] = useState<SongsProps>([]);
+  const [selectedSongs, setSelectedSongs] = useState<Array<string>>([]);
+
+  const fetchSelectedSongs = async () => {
+    try {
+      const store = await AsyncStorage.getItem("selectedMusics");
+      if (store !== null) {
+        const parsedSelectedMusics = JSON.parse(store);
+        setSelectedSongs(parsedSelectedMusics);
+        fetchMusics(parsedSelectedMusics);
+      }
+    } catch (error) {
+      console.error("Erro ao recuperar os músicas selecionadas:", error);
+    }  
+  };
+
+  const fetchMusics = async (ids: string[]) => {
+    try {
+      const { data, error } = await supabase
+        .from("Musics")
+        .select("*")
+        .in("id", ids);
+      if (error) {
+        throw error;
+      }
+      setSongs(data);
+      console.log(data)
+    } catch (error) {
+      console.error("Error fetching musics:", error);
+    }
+  };
+
+  const deleteUser = async (id: string) => {
+    try {
+      const musicsUpdate = selectedSongs.filter((song_id) => song_id !== id);
+      await AsyncStorage.setItem("selectedMusics", JSON.stringify(musicsUpdate));
+      setSelectedSongs(musicsUpdate);
+      fetchSelectedSongs();
+    } catch (error) {
+      return error;
+    }
+  };
+
+
+  useEffect(() => {
+    fetchSelectedSongs();
+  }, [route.params])
 
   return (
     <View
@@ -65,7 +97,7 @@ export function Musics() {
       </View>
       {songs.length > 0 ? (
         <View style={{ justifyContent: "center" }}>
-          {songs.map((item, index) => (
+          {songs.map((song, index) => (
             <View
               key={index}
               style={{
@@ -81,10 +113,14 @@ export function Musics() {
             >
               <MaterialIcons size={30} name="menu" color="#018786" />
               <View style={{ width: 200 }}>
-                <Text style={{ color: "#E1E1E1", fontSize: 18 }}>{item.title}</Text>
-                <Text style={{ color: "#E1E1E1", fontSize: 14 }}>{item.artist}</Text>
+                <Text style={{ color: "#E1E1E1", fontSize: 18 }}>{song.name}</Text>
+                <Text style={{ color: "#E1E1E1", fontSize: 14 }}>{song.artist}</Text>
               </View>
-              <MaterialIcons size={30} name="delete" color="#B00020" />
+              <MaterialIcons 
+                onPress={() => deleteUser(song.id)} 
+                size={30} name="delete" 
+                color="#B00020" 
+              />
             </View>
           ))}
         </View>

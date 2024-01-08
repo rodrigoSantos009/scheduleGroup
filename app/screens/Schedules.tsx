@@ -13,21 +13,16 @@ export function Schedules() {
           color: "#E2E2E2",
           fontWeight: "700",
         },
+        tabBarIndicatorStyle: { backgroundColor: "#E2E2E2" },
       }}
     >
-      <Tab.Screen
-        name="Próximos"
-        component={Next}
-        options={{
-          tabBarActiveTintColor: "red",
-        }}
+      <Tab.Screen 
+        name="Next" 
+        component={Next} 
       />
-      <Tab.Screen
-        name="Anteriores"
-        component={Prev}
-        options={{
-          tabBarActiveTintColor: "red",
-        }}
+      <Tab.Screen 
+        name="Prev" 
+        component={Prev} 
       />
     </Tab.Navigator>
   );

@@ -1,5 +1,11 @@
-import { NativeStackNavigationProp, createNativeStackNavigator } from "@react-navigation/native-stack";
-import { CreateSchedule, StackType } from "../screens/createSchedule/CreateSchedule";
+import {
+  NativeStackNavigationProp,
+  createNativeStackNavigator,
+} from "@react-navigation/native-stack";
+import {
+  CreateSchedule,
+  StackType,
+} from "../screens/createSchedule/CreateSchedule";
 import { Schedules } from "../screens/Schedules";
 import { AddMember } from "../screens/createSchedule/AddMember";
 import { AddMusic } from "../screens/createSchedule/AddMusic";
@@ -9,16 +15,16 @@ import { useNavigation } from "@react-navigation/native";
 import { Alert, BackHandler } from "react-native";
 
 export type CreateScheduleStackNavigator = {
-  Create: undefined,
-  AddMember: undefined,
-  AddMusic: undefined
-}
-export type CreateScheduleStackType = NativeStackNavigationProp<CreateScheduleStackNavigator>;
+  Create: undefined;
+  AddMember: undefined;
+  AddMusic: undefined;
+};
+export type CreateScheduleStackType =
+  NativeStackNavigationProp<CreateScheduleStackNavigator>;
 
 const Stack = createNativeStackNavigator<CreateScheduleStackNavigator>();
 
 export function CreateScheduleStack() {
-
   const navigation = useNavigation<StackType>();
 
   const clearAsyncStorage = async () => {
@@ -38,10 +44,7 @@ export function CreateScheduleStack() {
     return true;
   };
 
-    BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
+  BackHandler.addEventListener("hardwareBackPress", backAction);
 
   return (
     <Stack.Navigator

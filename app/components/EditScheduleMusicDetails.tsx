@@ -1,54 +1,55 @@
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { TextInput } from "react-native-paper";
-import { SongStackType, StackNavigator } from "../routes/createMusicStack.routes";
-import { useState } from "react";
+import { StackNavigator, StackType } from "../screens/createSchedule/CreateSchedule";
+import { useEffect, useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import { supabase } from "../lib/supabase";
 
-export function SongDetails() {
-  const route = useRoute<RouteProp<StackNavigator, "SongDetails">>();
-  const navigate = useNavigation<SongStackType>();
-  const [title, setTitle] = useState<string>(route.params?.title);
-  const [artist, setArtist] = useState<string>(route.params?.artist);
-  const [cover, setCover] = useState<string>(route.params.cover);
-  const [artistPicture, setArtistPicture] = useState<string>(route.params.artist_picture);
-  const [albumTitle, setAlbumTitle] = useState<string>(route.params.album_title);
+export function EditScheduleMusicDetails() {
+  const route = useRoute<RouteProp<StackNavigator, "EditScheduleMusicDetails">>();
+  const { navigate } = useNavigation<StackType>();
+  const [musicId, setMusicId] = useState(route.params.music_id)
+  const [name, setName] = useState<string>("");
+  const [artist, setArtist] = useState<string>("");
   const [informations, setInformations] = useState<string>("");
 
-  async function saveMusic() {
-    try {
-      const { data, error } = await supabase.from("Musics").insert({
-        name: title,
-        artist: artist,
-        informations: informations,
-        cover: cover,
-        artist_picture: artistPicture,
-        album_title: albumTitle,
-      });
-      navigate.popToTop();
-    } catch (error) {
-      console.log(error);
+  const findMusicById = async () => {
+    const { data } = await supabase
+      .from("Musics")
+      .select("*")
+      .eq("id", musicId);
+
+    if (data) {
+      setName(data[0].name);
+      setArtist(data[0].artist);
+      setInformations(data[0].informations)
     }
+  };
+
+  const editMusicDetails = async () => {
+    const musicData = {
+      name,
+      artist,
+      informations
+    }
+    const { data, error } = await supabase
+      .from("Musics")
+      .update(musicData)
+      .eq("id", musicId);  
   }
+
+  useEffect(() => {
+    findMusicById();
+  }, [])
 
   return (
     <View style={styles.container}>
       <Text style={{ color: "#E1E1E1" }}>Título</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Colossenses e suas linhas de amor"
-        textColor="white"
-        value={title}
-      />
+      <TextInput style={styles.input} placeholder="Título" textColor="white" value={name} />
       <Text style={{ color: "#E1E1E1" }}>Artista</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="fhop music"
-        textColor="white"
-        value={artist}
-      />
-      <Text style={{ color: "#E1E1E1" }}>Informações</Text>
+      <TextInput style={styles.input} placeholder="Artista" textColor="white" value={artist} />
+      <Text style={{ color: "#E1E1E1" }}>Título</Text>
       <TextInput
         style={styles.input}
         multiline={true}
@@ -61,17 +62,12 @@ export function SongDetails() {
       />
       <View>
         <TouchableOpacity
+          style={styles.buttonLinks}
           onPress={() =>
-            navigate.navigate("InsertLinks", {
-              title: title,
-              artist: artist,
-              informations: informations,
-              cover: cover,
-              artist_picture: artistPicture,
-              album_title: albumTitle,
+            navigate("EditLinksScheduleMusicDetails", {
+              music_id: route.params.music_id,
             })
           }
-          style={styles.buttonLinks}
         >
           <Text
             style={{
@@ -95,7 +91,7 @@ export function SongDetails() {
           </View>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={saveMusic} style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={editMusicDetails}>
         <Feather
           size={25}
           color={"white"}
